@@ -474,7 +474,7 @@ fi
 printf "Checking for HTTP client..."
 if [ -x "/usr/bin/curl" ]; then
 	if [ $runner_extended ]; then
-		download="/usr/bin/curl -O "
+		download="/usr/bin/curl --progress-bar -O "
 	else
 		download="/usr/bin/curl -s -O "
 	fi
