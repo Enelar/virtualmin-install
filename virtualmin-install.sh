@@ -471,7 +471,11 @@ fi
 # Check for wget or curl or fetch
 printf "Checking for HTTP client..."
 if [ -x "/usr/bin/curl" ]; then
-	download="/usr/bin/curl -s -O "
+	if [ $runner_extended ]; then
+		download="/usr/bin/curl -O "
+	else
+		download="/usr/bin/curl -s -O "
+	fi
 elif [ -x "/usr/bin/wget" ]; then
 	download="/usr/bin/wget -nv"
 elif [ -x "/usr/bin/fetch" ]; then
