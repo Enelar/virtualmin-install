@@ -170,6 +170,30 @@ setconfig () {
 	fi
 }
 
+if [ ! -x /usr/bin/tr ] || [ ! -x /usr/bin/tee ]; then
+	runner_extended=0
+
+	runner_await () {
+		echo "...in progress, please wait..."
+
+		if $1 >> $log; then
+			echo 1 > busy
+		fi
+	}
+
+else
+	runner_extended=1
+
+	runner_await () {
+		# Also showing last line of currently performing operation
+
+		if $1 2>&1 | tee $log | sed s/\n/\t\t\t\t\t/ | tr '\n' '\r'; then
+			echo 1 > busy
+		fi
+	}
+
+fi
+
 # Perform an action, log it, and run the spinner throughout
 runner () {
 	echo 0 > busy
@@ -178,20 +202,7 @@ runner () {
 		$srcdir/spinner busy &
 	fi
 
-	if [ ! -x /usr/bin/tr ] || [ ! -x /usr/bin/tee ]; then
-		echo "...in progress, please wait..."
-
-		if $1 >> $log; then
-			echo 1 > busy
-		fi
-
-	else
-		# Also showing last line of currently performing operation
-
-		if $1 2>&1 | tee $log | sed s/\n/\t\t\t\t\t/ | tr '\n' '\r'; then
-			echo 1 > busy
-		fi
-	fi
+	runner_await "$1"
 
 	ret=$(<busy)
 	rm busy
