@@ -541,10 +541,6 @@ mkdir $tempdir/files
 srcdir=$tempdir/files
 cd $srcdir
 
-# Download spinner
-$download http://software.virtualmin.com/lib/spinner
-chmod +x spinner
-
 # Setup log4sh so we can start keeping a proper log while also feeding output
 # to the console.
 echo "Loading log4sh logging library..."
@@ -559,6 +555,7 @@ else
 	echo " Check network connectivity, name resolution and disk space and try again."
 	exit 1
 fi
+
 
 # Setup log4sh properties
 # Console output
@@ -591,6 +588,10 @@ logger_info "Installing serial number and license key into /etc/virtualmin-licen
 echo "SerialNumber=$SERIAL" > /etc/virtualmin-license
 echo "LicenseKey=$KEY"	>> /etc/virtualmin-license
 chmod 700 /etc/virtualmin-license
+
+# Download spinner
+download http://software.virtualmin.com/lib/spinner
+chmod +x spinner
 
 # Detecting the OS
 # Grab the Webmin oschooser.pl script
