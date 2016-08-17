@@ -204,12 +204,14 @@ runner () {
 
 	runner_await "$1"
 
+	echo -ne "\r\t\t\t\t\t\r"
+
 	ret=$(<busy)
 	rm busy
 	sleep 1
 
 	if [[ $ret ]]; then
-		success "$cmd:"
+		success "$1:"
 	else
 		echo "$cmd failed.  Error (if any): $?"
 		echo
