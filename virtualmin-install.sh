@@ -172,7 +172,7 @@ setconfig () {
 
 # Perform an action, log it, and run the spinner throughout
 runner () {
-	echo 1 > busy
+	echo 0 > busy
 
 	if [ -x $srcdir/spinner ]; then
 		$srcdir/spinner busy &
@@ -182,14 +182,14 @@ runner () {
 		echo "...in progress, please wait..."
 
 		if $1 >> $log; then
-			echo 0 > busy
+			echo 1 > busy
 		fi
 
 	else
 		# Also showing last line of currently performing operation
 
-		if $1 | tee $log | sed s/\n/\t\t\t\t\t/ | tr '\n' '\r'; then
-			echo 0 > busy
+		if $1 2>&1 | tee $log | sed s/\n/\t\t\t\t\t/ | tr '\n' '\r'; then
+			echo 1 > busy
 		fi
 	fi
 
@@ -197,7 +197,7 @@ runner () {
 	rm busy
 	sleep 1
 
-	if [[ ! $ret ]]; then
+	if [[ $ret ]]; then
 		success "$cmd:"
 	else
 		echo "$cmd failed.  Error (if any): $?"
