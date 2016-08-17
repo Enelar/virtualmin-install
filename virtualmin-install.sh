@@ -475,7 +475,7 @@ printf "found $download\n"
 # download()
 # Use $download to download the provided filename or exit with an error.
 download() {
-	if $download $1
+	if ! runner "$download $1"
 	then
 		success "Download of $1"
    	return $?
