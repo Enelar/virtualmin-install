@@ -177,7 +177,7 @@ if [ ! -x /usr/bin/tr ] || [ ! -x /usr/bin/tee ]; then
 		echo "...in progress, please wait..."
 
 		if $1 >> $log; then
-			echo 1 > busy
+			echo 0 > busy
 		fi
 	}
 
@@ -188,7 +188,7 @@ else
 		# Also showing last line of currently performing operation
 
 		if $1 2>&1 | tee $log | sed s/\n/\t\t\t\t\t/ | tr '\n' '\r'; then
-			echo 1 > busy
+			echo 0 > busy
 		fi
 	}
 
@@ -196,7 +196,7 @@ fi
 
 # Perform an action, log it, and run the spinner throughout
 runner () {
-	echo 0 > busy
+	echo 1 > busy
 
 	if [ -x $srcdir/spinner ]; then
 		$srcdir/spinner busy &
@@ -492,7 +492,7 @@ printf "found $download\n"
 # download()
 # Use $download to download the provided filename or exit with an error.
 download() {
-	if ! runner "$download $1"
+	if runner "$download $1"
 	then
 		success "Download of $1"
    	return $?
